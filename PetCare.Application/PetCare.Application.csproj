@@ -4,10 +4,15 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>PetCare.Aplication</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="UseCases\" />
+      <ProjectReference Include="..\PetCare.Domain\PetCare.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers\" />
     </ItemGroup>
 
 </Project>

@@ -8,24 +8,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.6.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PetCare.Aplication\PetCare.Aplication.csproj" />
+      <ProjectReference Include="..\PetCare.Admin\PetCare.Admin.csproj" />
+      <ProjectReference Include="..\PetCare.Application\PetCare.Application.csproj" />
       <ProjectReference Include="..\PetCare.Common\PetCare.Common.csproj" />
       <ProjectReference Include="..\PetCare.Domain\PetCare.Domain.csproj" />
       <ProjectReference Include="..\PetCare.Infrastructure\PetCare.Infrastructure.csproj" />
+      <ProjectReference Include="..\PetCare.PetApp\PetCare.PetApp.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using PetCare.Common.Enums;
+using PetCare.Common.Enums.Pet;
 
 namespace PetCare.Domain.Models.Pet;
 

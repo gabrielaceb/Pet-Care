@@ -1,4 +1,4 @@
-﻿namespace PetCare.Common.Enums;
+﻿namespace PetCare.Common.Enums.Pet;
 
 public enum PetType
 {

@@ -11,7 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.Domain", "PetCare.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.Common", "PetCare.Common\PetCare.Common.csproj", "{FCEEB881-81C3-4333-836A-C7845B1BCA74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.Aplication", "PetCare.Aplication\PetCare.Aplication.csproj", "{9E5FEF48-6FDC-419F-A895-193C03224CA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.Application", "PetCare.Application\PetCare.Application.csproj", "{9E5FEF48-6FDC-419F-A895-193C03224CA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{C34941A6-FAB7-4648-90F8-F0E8AB8DFA96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.PetApp", "PetCare.PetApp\PetCare.PetApp.csproj", "{EF7E6B70-C525-4835-9C2F-154F5449E3FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCare.Admin", "PetCare.Admin\PetCare.Admin.csproj", "{945A2E55-1294-4D62-BAE7-B11308F3719E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,11 +45,23 @@ Global
 		{9E5FEF48-6FDC-419F-A895-193C03224CA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E5FEF48-6FDC-419F-A895-193C03224CA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E5FEF48-6FDC-419F-A895-193C03224CA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF7E6B70-C525-4835-9C2F-154F5449E3FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF7E6B70-C525-4835-9C2F-154F5449E3FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF7E6B70-C525-4835-9C2F-154F5449E3FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF7E6B70-C525-4835-9C2F-154F5449E3FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{945A2E55-1294-4D62-BAE7-B11308F3719E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{945A2E55-1294-4D62-BAE7-B11308F3719E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{945A2E55-1294-4D62-BAE7-B11308F3719E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{945A2E55-1294-4D62-BAE7-B11308F3719E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {77D81122-DF69-4C01-B2C7-442871EAC2B5}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EF7E6B70-C525-4835-9C2F-154F5449E3FC} = {C34941A6-FAB7-4648-90F8-F0E8AB8DFA96}
+		{945A2E55-1294-4D62-BAE7-B11308F3719E} = {C34941A6-FAB7-4648-90F8-F0E8AB8DFA96}
 	EndGlobalSection
 EndGlobal

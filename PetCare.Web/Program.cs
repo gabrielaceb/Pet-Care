@@ -6,6 +6,8 @@ using PetCare.Infrastructure;
 using PetCare.Web.Components;
 using PetCare.Web.Components.Account;
 using PetCare.Domain;
+using PetCare.Domain.Interfaces;
+using PetCare.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,33 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+builder.Services.AddMvcCore();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
+#region dependencies
+
+builder.Services.AddScoped<IPetRepository, PetRepository>();
+builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();
+builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
+builder.Services.AddScoped<IPetDetailsRepository, PetDetailsRepository>();
+builder.Services.AddScoped<IClinicVisitRepository, ClinicVisitRepository>();
+
+
+#endregion
+
+builder.Services.AddSwaggerGen (c =>
+{
+    c.ResolveConflictingActions (apiDescriptions => apiDescriptions.First ());
+});
+
+// #region Minio
+// var config = builder.Configuration.GetSection("Minio");
+// builder.Services.AddMinio(client => client
+//     .WithEndpoint(config.GetSection("Endpoint").Value)
+//     .WithCredentials(config.GetSection("AccessKey").Value, config.GetSection("SecretKey").Value)
+//     .WithSSL(true));
+// builder.Services.AddScoped<IFileRepository, FileRepository>();
+// #endregion
 
 builder.Services.AddAuthentication(options =>
     {
@@ -44,6 +73,16 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ADMIN", policy => policy.RequireRole("ADMIN"));
     options.AddPolicy("GUEST", policy => policy.RequireRole("GUEST"));
 });
+
+using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,13 +97,18 @@ else
     app.UseHsts();
 }
 
+app.UseSwagger();
+app.UseSwaggerUI();
+app.MapControllers();
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(PetCare.PetApp._Imports).Assembly)
+    .AddAdditionalAssemblies(typeof(PetCare.Admin._Imports).Assembly);
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
