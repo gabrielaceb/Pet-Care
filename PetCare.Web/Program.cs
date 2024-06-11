@@ -8,12 +8,16 @@ using PetCare.Web.Components.Account;
 using PetCare.Domain;
 using PetCare.Domain.Interfaces;
 using PetCare.Infrastructure.Repositories;
+using MudBlazor.Services;
+using PetCare.Aplication.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddMudServices();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -29,6 +33,10 @@ builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();
 builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
 builder.Services.AddScoped<IPetDetailsRepository, PetDetailsRepository>();
 builder.Services.AddScoped<IClinicVisitRepository, ClinicVisitRepository>();
+builder.Services.AddScoped<IStVaccinesRepository, StVaccinesRepository>();
+
+builder.Services.AddScoped<PetUseCase>();
+builder.Services.AddScoped<StVaccineUseCase>();
 
 
 #endregion

@@ -11,5 +11,5 @@ public class StVaccines
     public string Description { get; set; }
     public int Age { get; set; }
     
-    public AnimalBreed AnimalBreed { get; set; }
+    public CatBreed CatBreed { get; set; }
 }

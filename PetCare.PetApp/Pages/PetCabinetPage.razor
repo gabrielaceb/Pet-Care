@@ -1,0 +1,110 @@
+﻿@page "/PetCabinetPage/{PetId:guid}"
+@using System.Globalization
+@using PetCare.Aplication.UseCases
+@using PetCare.Common.Enums.Pet
+@using PetCare.Domain.Models.Pet
+@using PetCare.Domain.Models.StadnartValues
+@using PetCare.PetApp.Componets.Dialogs
+
+@inject PetUseCase PetUseCase
+@inject StVaccineUseCase StVaccineUseCase
+@inject NavigationManager _navigationManager
+@inject IDialogService DialogService
+<h3>PetCabinetPage</h3>
+@rendermode InteractiveServer
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<div class="d-flex flex-wrap">
+    <MudPaper Class="pa-10 ma-2 col-12 col-md-4">
+        <MudImage Src="https://www.thesprucepets.com/thmb/Swzyeh82uUcROMC5HIR4LMzoa4o=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-1319774380-c3da91f9259a47e0966007f8e10690ba.jpg"
+                  Width="200" Alt="Pet" Elevation="25" Class="rounded-lg"/>
+
+        <MudTextField T="string" @bind-Value="@_pet.Name" Text="@_pet.Name" Label="Name" ReadOnly="true" Variant="Variant.Text"/>
+
+        <MudTextField T="string" @bind-Value="@_pet.Breed" Text="@_pet.Breed" Label="Breed" ReadOnly="true" Variant="Variant.Text"/>
+
+        <MudTextField T="PetType?" @bind-Value="@_pet.PetType" Text="@_pet.PetType.ToString()" Label="Pet type" ReadOnly="true" Variant="Variant.Text"/>
+        
+
+        <br/>
+
+    </MudPaper>
+    <MudPaper Class="pa-10 ma-2 col-12 col-md-4">
+        <MudDatePicker  @bind-Date="@_latestPetDetails.CreatedAt" Label="Last Checked" ReadOnly="true" />
+        <MudTextField T="float" @bind-Value="@_latestPetDetails.Weight" Text="@_latestPetDetails.Weight.ToString(CultureInfo.CurrentCulture)" Label="Weight" ReadOnly="false" Variant="Variant.Text"/>
+        <MudTextField T="float" @bind-Value="@_latestPetDetails.Height" Text="@_latestPetDetails.Height.ToString(CultureInfo.CurrentCulture)" Label="Height" ReadOnly="false" Variant="Variant.Text"/>
+        <MudDivider/>
+        <MudDivider/>
+        <MudDivider/>
+        <MudButton Class="mt-4" OnClick="UpdateDetails" Color="Color.Primary" Variant="Variant.Filled">Update detalis</MudButton>
+        <MudButton Class="mt-4"  OnClick="GoToDetails" Color="Color.Primary" Variant="Variant.Filled">View Graphic</MudButton>
+        
+    </MudPaper>
+    <MudPaper Class="pa-10 ma-2 col-12 col-md-3">
+        @foreach (var vaccine in _vaccines)
+        {
+            <MudTextField T="string" @bind-Value="@vaccine.Name" Text="@vaccine.Name" Label="Vaccine" ReadOnly="true" Variant="Variant.Text"/>
+        }
+        <MudDivider/>
+        <MudButton lass="mt-4" OnClick="AddVaccine" Color="Color.Primary" Variant="Variant.Filled" >Add</MudButton>
+    </MudPaper>
+</div>
+
+
+
+@code {
+     [Parameter] public required Guid PetId { get; set; }
+
+    private Pet? _pet = new();
+    private IEnumerable<PetDetails> _petDetails = new List<PetDetails>();
+    private PetDetails _latestPetDetails = new();
+    private IEnumerable<Vaccine> _vaccines = new List<Vaccine>();
+    private IEnumerable<ClinicVisit> _clinicVisits = new List<ClinicVisit>();
+    private IEnumerable<StVaccines> _stVaccines = new List<StVaccines>();
+     
+    protected override async Task OnInitializedAsync()
+    {
+        _pet = await PetUseCase.FindPetById(PetId);
+        _petDetails = await PetUseCase.FindAllPetDetails(PetId);
+        var petDetailsEnumerable = _petDetails.ToList();
+        if (!petDetailsEnumerable.Any()) _latestPetDetails = new PetDetails();
+        else
+        if (petDetailsEnumerable.Count() == 1) _latestPetDetails = petDetailsEnumerable.FirstOrDefault();
+        else _latestPetDetails = petDetailsEnumerable.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+        _latestPetDetails.PetId = PetId;
+        
+        _vaccines = await PetUseCase.GetTopVaccines(PetId, 5);
+        _clinicVisits = await PetUseCase.GetTopClinicVisits(PetId, 5);
+        _stVaccines = await StVaccineUseCase.FindAll();
+        
+        
+    }
+    
+    private async Task UpdateDetails()
+    {
+        _latestPetDetails.CreatedAt = DateTime.Now;
+        await PetUseCase.UpdatePetDetails(_latestPetDetails);
+    }
+    
+    private void GoToDetails()
+    {
+        _navigationManager.NavigateTo($"/PetDetailsPage/{PetId}");
+    }
+    
+    private async Task AddVaccine()
+    {
+        DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true ,CloseOnEscapeKey = true };
+        var parameters = new DialogParameters<AddVaccineModal>();
+        parameters.Add("PetId", PetId);
+        var dialog = DialogService.Show<AddVaccineModal>("Add Vaccine", parameters ,options);
+        
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            StateHasChanged();
+        }
+        
+    }
+}

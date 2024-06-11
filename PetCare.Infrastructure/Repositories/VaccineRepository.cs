@@ -37,12 +37,21 @@ public class VaccineRepository(ApplicationDbContext context) : IVaccineRepositor
             .ToListAsync();
     }
 
-    public async Task<Vaccine?> GetVaccinesByDateRange(DateTime start, DateTime end)
+    public async Task<IEnumerable<Vaccine>?> GetVaccinesByDateRange(Guid petId, DateTime start, DateTime end)
     {
         return await context.Vaccines
             .Include(v => v.Pet)
-            .Where(v => v.Date >= start && v.Date <= end)
-            .FirstOrDefaultAsync();
+            .Where(v => v.Date >= start && v.Date <= end && v.PetId == petId)
+            .ToListAsync();
     }
     
+    public async Task<IEnumerable<Vaccine>> GetTopVaccines(Guid petId, int number)
+    {
+        return await context.Vaccines
+            .Include(v => v.Pet)
+            .Where(v => v.PetId == petId)
+            .OrderByDescending(v => v.Date)
+            .Take(number)
+            .ToListAsync();
+    }
 }

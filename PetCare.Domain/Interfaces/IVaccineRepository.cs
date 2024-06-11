@@ -9,5 +9,6 @@ public interface IVaccineRepository
     public Task<IEnumerable<Vaccine>> FindAll();
     public Task UpdateVaccine(Vaccine vaccine);
     public Task<List<Vaccine>> GetVaccinesByPetId(Guid petId);
-    public Task<Vaccine?> GetVaccinesByDateRange(DateTime start, DateTime end);
+    public Task<IEnumerable<Vaccine>?> GetVaccinesByDateRange(Guid petId ,DateTime start, DateTime end);
+    public Task<IEnumerable<Vaccine>> GetTopVaccines(Guid petId, int number);
 }

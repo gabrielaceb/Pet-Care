@@ -1,0 +1,79 @@
+﻿
+@using PetCare.Aplication.UseCases
+@using PetCare.Common.Enums.Pet
+@using PetCare.Common.Enums.StValues
+@using PetCare.Domain.Models.Pet
+
+@inject ISnackbar Snackbar
+@inject PetUseCase PetUseCase
+@rendermode InteractiveServer
+<MudDialog >
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.NoteAdd" Class="mr-3 mb-n1"/>Add Pet
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="_newPet.Name" Label=Name Variant="Variant.Text"/>
+        <MudSelect T="PetType?" Label="Select your pet type" MultiSelection="false" @bind-Value="_newPet.PetType" CloseOnSelect="true">
+            @foreach (var value in _petTypes)
+            {
+                <MudSelectItem T="PetType?" Value="@value">
+                    @value.ToString()
+                </MudSelectItem>
+            }
+        </MudSelect>
+        @if (_newPet.PetType == PetType.Cat)
+        {
+            <MudSelect T="CatBreed?" Label="Select your cat breed" MultiSelection="false" @bind-Value="_catBreed" CloseOnSelect="true">
+                @foreach (var value in _catBreeds)
+                {
+                    <MudSelectItem T="CatBreed?" Value="@value">
+                        @value.ToString()
+                    </MudSelectItem>
+                }
+            </MudSelect>
+        }
+        
+        <MudTextField T="string" @bind-Value="_newPet.Color" Label="Color" Variant="Variant.Text"/>
+        <MudDatePicker Placeholder="dd.MM.yyyy" Editable="true"  @bind-Date="_newPet.BirthDate" Label="Birth Date"  Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy"/>
+        <MudTextField T="string" @bind-Value="_newPet.Description" Label="Description" Variant="Variant.Text"/>
+        
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="AddPet">Add Pet</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    
+    private Pet _newPet = new();
+    
+    private List<PetType>? _petTypes = Enum.GetValues<PetType>().ToList();
+    private List<CatBreed> _catBreeds = Enum.GetValues<CatBreed>().ToList();
+    
+    private CatBreed? _catBreed;
+
+    private async Task AddPet()
+    {
+        if (_newPet.Name == null || _newPet.PetType == null)
+        {
+            Snackbar.Add("Please fill in all fields", Severity.Error);
+            return;
+        }
+        _newPet.Breed = _newPet.PetType == PetType.Cat ? _catBreed.ToString() : null;
+        await PetUseCase.AddPet(_newPet);
+        
+        Snackbar.Add($"{_newPet.Name} is added",Severity.Success);
+        MudDialog.Close();
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    
+}

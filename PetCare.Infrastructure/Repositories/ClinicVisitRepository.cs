@@ -46,12 +46,22 @@ public class ClinicVisitRepository(ApplicationDbContext context) : IClinicVisitR
             .ToListAsync();
     }
 
-    public async Task<ClinicVisit?> GetVisitsByDateRange(DateTime start, DateTime end)
+    public async Task<ClinicVisit?> GetVisitsByDateRange(Guid petId, DateTime start, DateTime end)
     {
         return await context.ClinicVisits
             .Include(c => c.Pet)
-            .Where(c => c.Date >= start && c.Date <= end)
+            .Where(c => c.Date >= start && c.Date <= end && c.PetId == petId)
             .FirstOrDefaultAsync();
+    }
+    
+    public async Task<IEnumerable<ClinicVisit>> GetTopVisits(Guid petId, int number)
+    {
+        return await context.ClinicVisits
+            .Include(c => c.Pet)
+            .Where(c => c.PetId == petId)
+            .OrderByDescending(c => c.Date)
+            .Take(number)
+            .ToListAsync();
     }
     
 }

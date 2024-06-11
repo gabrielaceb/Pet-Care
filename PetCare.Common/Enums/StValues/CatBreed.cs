@@ -1,6 +1,6 @@
 ﻿namespace PetCare.Common.Enums.StValues;
 
-public enum AnimalBreed
+public enum CatBreed
 {
     BritishShorthair = 0,
     Persian = 1,

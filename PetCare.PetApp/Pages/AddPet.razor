@@ -1,0 +1,51 @@
+﻿@page "/AddPet"
+@using PetCare.Aplication.UseCases
+@using PetCare.Common.Enums.Pet
+@using PetCare.Domain.Models.Pet
+@inject ISnackbar Snackbar
+@inject PetUseCase PetUseCase
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+@rendermode InteractiveServer
+<h3>AddPet</h3>
+
+@foreach (var value in _petTypes)
+{
+    <p>sadasdasdas</p>
+}
+<MudTextField @bind-Value="_newPet.Name" Label=Name Variant="Variant.Text"/>
+<MudSelect T="double" Label="Price" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+    <MudSelectItem T="double" Value="4.50" />
+    <MudSelectItem T="double" Value="4.99" />
+    <MudSelectItem T="double" Value="3.60" />
+</MudSelect>
+<MudButton Color="Color.Primary" OnClick="Add">Add Pet</MudButton>
+
+@code {
+    private Pet _newPet = new();
+
+    private Array _petTypes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _newPet.PetType = PetType.Dog;
+        _petTypes = Enum.GetValues(typeof(PetType));
+        Console.WriteLine(_petTypes);
+    }
+
+    private async Task Add()
+    {
+        if (_newPet.Name == null || _newPet.PetType == null)
+        {
+            Snackbar.Add("Please fill in all fields", Severity.Error);
+            return;
+        }
+        
+        await PetUseCase.AddPet(_newPet);
+        
+        Snackbar.Add($"{_newPet.Name} is added",Severity.Success);
+       
+    }
+
+}

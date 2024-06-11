@@ -1,0 +1,21 @@
+﻿@page "/PetDetailsPage/{PetId:guid}"
+
+@inject PetUseCase PetUseCase
+
+@using PetCare.Aplication.UseCases
+@using PetCare.Domain.Models.Pet
+<h3>PetDetailsPage</h3>
+
+
+@code {
+    [Parameter] public required Guid PetId { get; set; }
+
+    private Pet? _pet = new Pet();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _pet = await PetUseCase.FindPetById(PetId);
+      
+    }
+
+}

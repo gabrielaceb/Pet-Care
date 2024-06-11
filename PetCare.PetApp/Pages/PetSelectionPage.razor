@@ -1,0 +1,97 @@
+﻿@page "/PetSelectionPage"
+
+@rendermode InteractiveServer
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+@using PetCare.Aplication.UseCases
+@using PetCare.Domain.Models.Pet
+@using PetCare.PetApp.Componets.Dialogs
+
+@inject IDialogService DialogService
+@inject PetUseCase PetUseCase
+@inject NavigationManager _navigationManager
+<h3>PetSelectionPage</h3>
+<div class="d-flex flex-wrap">
+    
+    @* @if (_pets == null || !_pets.Any()) *@
+    @* { *@
+        <MudCard Class="pa-10 ma-2 col-12 col-md-4">
+            <MudCardHeader >
+                <CardHeaderAvatar>
+                    <MudAvatar Color="Color.Secondary">I</MudAvatar>
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.body1">Your Pet</MudText>
+                    <MudText Typo="Typo.body2">Your Pet Name</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardMedia Image="https://www.doggies.com/blog/wp-content/uploads/2017/10/pet-montage-1024x1024.jpg" Height="250"/>
+            <MudCardContent>
+                <MudText Typo="Typo.body2">Click to add</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" @onclick="AddPet" Color="Color.Default"/>
+
+            </MudCardActions>
+        </MudCard>
+    @* // } *@
+    @* // else *@
+    @* // { *@
+        @foreach (var pet in _pets)
+        {
+            <MudCard Class="pa-10 ma-2 col-12 col-md-4">
+                <MudCardHeader >
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@pet.PetType.ToString()</MudText>
+                        <MudText Typo="Typo.body2">@pet.Name</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardMedia Image="https://www.thesprucepets.com/thmb/Swzyeh82uUcROMC5HIR4LMzoa4o=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-1319774380-c3da91f9259a47e0966007f8e10690ba.jpg" Height="250"/>
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">Click to Go to dashbaord</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" @onclick="() => NavigateToDashboard(pet.Id)" Color="Color.Default"/>
+
+                </MudCardActions>
+            </MudCard>
+        }
+    @* } *@
+
+</div>
+@code {
+    
+    private List<Pet>? _pets = new List<Pet>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _pets = await PetUseCase.FindAllPets() as List<Pet>;
+    }
+    
+    private async Task AddPet()
+    {
+        DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true ,CloseOnEscapeKey = true };
+       
+        var dialog = await DialogService.ShowAsync<AddPetDialog>("Add Pet", options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            StateHasChanged();
+        }
+    }
+    private async Task NavigateToAddPet()
+    {
+        _navigationManager.NavigateTo("/AddPet");
+    }
+    
+    private async Task NavigateToDashboard(Guid petId)
+    {
+        _navigationManager.NavigateTo($"/PetCabinetPage/{petId}");
+    }
+    
+
+}

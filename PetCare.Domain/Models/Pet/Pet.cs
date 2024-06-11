@@ -8,12 +8,12 @@ public class Pet
 {
     [Key]
     public Guid Id { get; set; }
-    public required string Name { get; set; }
-    public required string Breed { get; set; }
-    public required string Color { get; set; }
+    public  string Name { get; set; }
+    public  string Breed { get; set; }
+    public  string Color { get; set; }
     public string? Description { get; set; }
-    public PetType PetType { get; set; }
-    public required DateTime BirthDate { get; set; }
+    public PetType? PetType { get; set; }
+    public  DateTime? BirthDate { get; set; }
     public string? ImagePath { get; set; }
     
     public DateTime? LastClinicVisit { get; set; }
