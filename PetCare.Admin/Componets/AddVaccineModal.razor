@@ -1,0 +1,46 @@
+﻿@using PetCare.Aplication.UseCases
+@using PetCare.Domain.Models.Pet
+@using PetCare.Domain.Models.StadnartValues
+@inject ISnackbar Snackbar
+@inject PetUseCase PetUseCase
+
+@inject StVaccineUseCase StVaccineUseCase
+@rendermode InteractiveServer
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.NoteAdd" Class="mr-3 mb-n1"/>Add Vaccine
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="_newVaccine.Name" Label=Name Variant="Variant.Text"/>
+        <MudTextField @bind-Value="_newVaccine.Description" Label=Description Variant="Variant.Text"/>
+        <MudTextField T ="int"  @bind-Value="_newVaccine.Age" Label="Age" Variant="Variant.Text"/>
+        
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+    <MudButton Color="Color.Primary" OnClick="AddVaccine">Add Vaccine</MudButton>
+    </DialogActions>
+    
+</MudDialog>
+
+@code {
+    
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    private StVaccines _newVaccine = new();
+    
+    private async Task AddVaccine()
+    {
+        await StVaccineUseCase.AddVaccine(_newVaccine);
+        Snackbar.Add("Vaccine added", Severity.Success);
+        MudDialog.Close();
+    }
+    
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+    
+}

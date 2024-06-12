@@ -21,5 +21,6 @@ public class PetDetailsConfiguration : IEntityTypeConfiguration<PetDetails>
         builder.HasOne(p => p.Pet)
             .WithMany(p => p.PetDetails)
             .HasForeignKey(t => t.PetId);
+
     }
 }

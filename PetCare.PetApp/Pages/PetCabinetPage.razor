@@ -27,14 +27,13 @@
 
         <MudTextField T="PetType?" @bind-Value="@_pet.PetType" Text="@_pet.PetType.ToString()" Label="Pet type" ReadOnly="true" Variant="Variant.Text"/>
         
-
         <br/>
 
     </MudPaper>
     <MudPaper Class="pa-10 ma-2 col-12 col-md-4">
         <MudDatePicker  @bind-Date="@_latestPetDetails.CreatedAt" Label="Last Checked" ReadOnly="true" />
-        <MudTextField T="float" @bind-Value="@_latestPetDetails.Weight" Text="@_latestPetDetails.Weight.ToString(CultureInfo.CurrentCulture)" Label="Weight" ReadOnly="false" Variant="Variant.Text"/>
-        <MudTextField T="float" @bind-Value="@_latestPetDetails.Height" Text="@_latestPetDetails.Height.ToString(CultureInfo.CurrentCulture)" Label="Height" ReadOnly="false" Variant="Variant.Text"/>
+        <MudTextField T="double" @bind-Value="@_latestPetDetails.Weight" Text="@_latestPetDetails.Weight.ToString(CultureInfo.CurrentCulture)" Label="Weight" ReadOnly="false" Variant="Variant.Text"/>
+        <MudTextField T="double" @bind-Value="@_latestPetDetails.Height" Text="@_latestPetDetails.Height.ToString(CultureInfo.CurrentCulture)" Label="Height" ReadOnly="false" Variant="Variant.Text"/>
         <MudDivider/>
         <MudDivider/>
         <MudDivider/>
@@ -78,8 +77,6 @@
         _vaccines = await PetUseCase.GetTopVaccines(PetId, 5);
         _clinicVisits = await PetUseCase.GetTopClinicVisits(PetId, 5);
         _stVaccines = await StVaccineUseCase.FindAll();
-        
-        
     }
     
     private async Task UpdateDetails()
@@ -95,7 +92,7 @@
     
     private async Task AddVaccine()
     {
-        DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true ,CloseOnEscapeKey = true };
+        DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = false ,CloseOnEscapeKey = true };
         var parameters = new DialogParameters<AddVaccineModal>();
         parameters.Add("PetId", PetId);
         var dialog = DialogService.Show<AddVaccineModal>("Add Vaccine", parameters ,options);

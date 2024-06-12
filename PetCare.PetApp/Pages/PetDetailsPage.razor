@@ -4,18 +4,53 @@
 
 @using PetCare.Aplication.UseCases
 @using PetCare.Domain.Models.Pet
-<h3>PetDetailsPage</h3>
+<div>
+    <MudChart ChartType="ChartType.Line" ChartSeries="@SeriesWeight" @bind-SelectedIndex="Index" XAxisLabels="@XAxisLabels" Width="40%" Height="350px" ChartOptions="@Options"/>
+    <MudChart ChartType="ChartType.Line" ChartSeries="@SeriesHeight" @bind-SelectedIndex="Index" XAxisLabels="@XAxisLabels" Width="40%" Height="350px" ChartOptions="@Options"/>
+    
+</div>
 
 
 @code {
     [Parameter] public required Guid PetId { get; set; }
-
+    private int Index = -1;
     private Pet? _pet = new Pet();
+    private List<PetDetails>? _petDetails = new List<PetDetails>();
+    public ChartOptions Options = new ChartOptions();
+    public List<ChartSeries> SeriesWeight = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Weight", Data = new double[] { 3, 4, 5, 5, 5, 6, 7, 6, 6 } },
+    };
+    public List<ChartSeries> SeriesHeight = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Height", Data = new double[] { 55, 65, 62, 62, 69, 72, 79,90 } },
+    };
     
+    public string[] XAxisLabels = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
     protected override async Task OnInitializedAsync()
     {
         _pet = await PetUseCase.FindPetById(PetId);
-      
+        _petDetails = await PetUseCase.FindAllPetDetails(PetId) as List<PetDetails>;
+       
+    }
+    
+    private async Task GetDetails()
+    {
+        var petDetailsEnumerable = _petDetails.ToList();
+        if (!petDetailsEnumerable.Any()) return;
+        var WeightArray = petDetailsEnumerable.Select(x => x.Weight).ToArray();
+        var HeightArray = petDetailsEnumerable.Select(x => x.Height).ToArray();
+        // add 0 in start 
+        WeightArray = WeightArray.Prepend(0).ToArray();
+        HeightArray = HeightArray.Prepend(0).ToArray();
+        
+        var createdAtArray = petDetailsEnumerable.Select(x => x.CreatedAt).ToArray();
+        XAxisLabels = createdAtArray.Select(x => x.ToString()).ToArray();
+        
+        SeriesWeight[0].Data = WeightArray;
+        SeriesHeight[0].Data = HeightArray;
+
+
     }
 
 }

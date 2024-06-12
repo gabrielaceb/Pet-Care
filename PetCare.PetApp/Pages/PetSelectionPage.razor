@@ -74,7 +74,7 @@
     
     private async Task AddPet()
     {
-        DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true ,CloseOnEscapeKey = true };
+        DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = false ,CloseOnEscapeKey = true };
        
         var dialog = await DialogService.ShowAsync<AddPetDialog>("Add Pet", options);
         var result = await dialog.Result;
